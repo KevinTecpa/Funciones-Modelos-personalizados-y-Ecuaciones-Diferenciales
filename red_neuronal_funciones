@@ -3,16 +3,19 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
+ # Función para crear la red neuronal
 def crear_red():
     model = models.Sequential([
         layers.Dense(20, activation='tanh', input_shape=(1,)),
         layers.Dense(20, activation='tanh'),
         layers.Dense(1)
     ])
+
+# Compilar el modelo con el optimizador Adam y la función de pérdida MSE (error cuadrático medio)
     model.compile(optimizer='adam', loss='mse')
     return model
 
-# Función (a)
+# Función
 x = np.linspace(-1, 1, 200)
 y = 3 * np.sin(np.pi * x)
 X_train = x.reshape(-1,1)
@@ -23,7 +26,18 @@ model1.fit(X_train, Y_train, epochs=500, verbose=0)
 y_pred1 = model1.predict(X_train)
 
 
-# Graficar
+#  Función (b)
+#x2 = np.linspace(-1, 1, 200)  
+#y2 = 1 + 2*x2 + 4*x2**3       
+#X_train2 = x2.reshape(-1,1)   
+#Y_train2 = y2.reshape(-1,1)   
+
+#model2 = crear_red()           
+#model2.fit(X_train2, Y_train2, epochs=500, verbose=0)  
+#y_pred2 = model2.predict(X_train2)  # Obtener predicciones
+
+
+#  Graficar resultados 
 plt.figure(figsize=(10,4))
 
 plt.subplot(1,2,1)
@@ -32,5 +46,13 @@ plt.plot(x, y, 'b', label='Función real')
 plt.plot(x, y_pred1, 'r--', label='Red')
 plt.legend()
 
-plt.tight_layout()
-plt.show()
+# Gráfica de la función (b)
+#plt.subplot(1,2,2)         
+#plt.title("1 + 2x + 4x^3")
+#plt.plot(x2, y2, 'b', label='Función real')    
+#plt.plot(x2, y_pred2, 'r--', label='Red')     
+#plt.legend()
+
+plt.tight_layout() # Ajustar los subplots para que no se sobrepongan
+plt.show() # Mostrar la figura
+
