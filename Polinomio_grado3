@@ -1,0 +1,48 @@
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras import layers, models, optimizers
+import matplotlib.pyplot as plt
+
+#  Capa personalizada corregida 
+class PolinomioGrado3(layers.Layer):
+    def __init__(self):
+        super(PolinomioGrado3, self).__init__()
+        # Crear los coeficientes como pesos entrenables de Keras
+        self.a0 = self.add_weight(name='a0', shape=(), initializer='zeros', trainable=True)
+        self.a1 = self.add_weight(name='a1', shape=(), initializer='zeros', trainable=True)
+        self.a2 = self.add_weight(name='a2', shape=(), initializer='zeros', trainable=True)
+        self.a3 = self.add_weight(name='a3', shape=(), initializer='zeros', trainable=True)
+        
+    def call(self, x):
+        return self.a0 + self.a1*x + self.a2*x**2 + self.a3*x**3
+
+#  Datos 
+x = np.linspace(-1, 1, 200, dtype=np.float32).reshape(-1,1)
+y = np.cos(2*x).reshape(-1,1)
+
+#  Modelo 
+model = models.Sequential([
+    PolinomioGrado3()
+])
+
+model.compile(optimizer=optimizers.Adam(learning_rate=0.05), loss='mse')
+
+#  Entrenamiento 
+model.fit(x, y, epochs=500, verbose=0)
+
+#  Resultados 
+y_pred = model.predict(x)
+
+plt.figure(figsize=(6,4))
+plt.plot(x, y, label='cos(2x) real', color='blue')
+plt.plot(x, y_pred, '--', label='Polinomio aproximado', color='red')
+plt.legend()
+plt.title('Ajuste de polinomio grado 3 a cos(2x)')
+plt.show()
+
+# Imprimir coeficientes entrenados
+weights = model.layers[0]
+print(f"a0 = {weights.a0.numpy():.4f}")
+print(f"a1 = {weights.a1.numpy():.4f}")
+print(f"a2 = {weights.a2.numpy():.4f}")
+print(f"a3 = {weights.a3.numpy():.4f}")
